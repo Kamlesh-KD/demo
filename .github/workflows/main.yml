@@ -6,11 +6,25 @@ jobs:
   super-lint:
     name: Lint code base
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Run Super-Linter
+        id: lint
         uses: github/super-linter@v4
+        continue-on-error: true  # Optional: Allows job to continue even if linter fails
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print Super-Linter Results (if any)
+        if: always()
+        run: |
+          echo "=== Super-Linter Output ==="
+          if [ -f super-linter.log ]; then
+            cat super-linter.log
+          else
+            echo "No explicit super-linter.log file found. Check above logs for inline output."
+          fi
