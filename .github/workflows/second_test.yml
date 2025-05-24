@@ -1,0 +1,36 @@
+name: Add Two Numbers
+
+on:
+  workflow_dispatch:
+    inputs:
+      num1:
+        description: 'First number'
+        required: true
+        default: '5'
+      num2:
+        description: 'Second number'
+        required: true
+        default: '6'
+
+jobs:
+  add_numbers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Calculate sum
+        run: |
+          num1=${{ github.event.inputs.num1 }}
+          num2=${{ github.event.inputs.num2 }}
+          sum=$((num1 + num2))
+          echo "Sum: $sum"
+          if [ "$sum" -gt 15 ]; then
+            echo "❌ Sum is greater than 15. Failing the job."
+            exit 1
+          else
+            echo "✅ Sum is within acceptable range."
+          fi
